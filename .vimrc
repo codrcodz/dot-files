@@ -18,7 +18,7 @@ set nohlsearch
 " Show row numbers on left side of window
 set number
 " Enable mouse use (visual mode will engage when mouse is used to select text)
-set mouse=a
+"set mouse=a
 " Use visual bell instead of beeping when doing something wrong
 set visualbell
 " Always display the status line, even if only one window is displayed
