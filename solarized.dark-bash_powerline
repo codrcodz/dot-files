@@ -67,7 +67,7 @@ bash_powerline() {
 	# Define the function that parse out the OS name and version number
 	# This info is used later by the ps1_setter()
 	os_parser() {
-		UNAME={$(uname)}
+		UNAME=$(uname)
 		if [[ "$UNAME" == "Darwin" ]]; then
 			readonly OS="MacOSX"
 		elif [[ "$UNAME" == "Linux" ]]; then
@@ -76,15 +76,18 @@ bash_powerline() {
 			elif [ -f /etc/lsb-release ]; then
 				local DISTRIB_ID="$(grep 'DISTRIB_ID' /etc/lsb-release | cut -d = -f 2)" &&
 				local DISTRIB_RELEASE="$(grep 'DISTRIB_RELEASE' /etc/lsb-release | cut -d = -f 2)" &&
-				readonly OS="$DISTRIB_ID$DISTRIB_RELEASE"	
+				readonly OS="$DISTRIB_ID$DISTRIB_RELEASE"
 			else
-				readonly OS=$(uname) && exit 1
+				readonly OS=$(uname)
 			fi
 		else
-			readonly OS="UNAME" && exit 1
+			readonly OS="UNAME"
 		fi
 	}
 	
+	# Run the os_parser() to set the $OS variable
+	os_parser
+
 	# Defines the function that parses git info 
 	# Info from the .git metadata directory is pulled after each change of directory
 	# This info is used later by the ps1_setter()
@@ -115,7 +118,7 @@ bash_powerline() {
 	# The bash reserved variable $PROMPT_COMMAND takes its value from ps1_setter()
 	ps1_setter() {
 		# Check the exit code of the previous command
-	        # display different colors in the prompt accordingly
+	    # display different colors in the prompt accordingly
 		if [ $? -eq 0 ]; then
 			local BG_EXIT="$BG_GREEN"
 		else
