@@ -1,0 +1,68 @@
+#!/usr/bin/env bash
+
+### READ ME ###
+# This script was originally written by riobard @ https://github.com/riobard/bash-powerline
+# The most recent copy of my fork can be found at https://github.com/maxbrisance/profile
+# 
+# bash_powerline is a function that, when run by your .bashrc,
+# will generate a nice command prompt that displays:
+# 
+# The current username
+# The OS name and version number (for Linux boxes)
+# The hostname
+# The working directory
+# The .git metadata for the working directory
+# The shell-level
+# A green/red visual indicator of the exit status of the last command
+# 
+# It is designed to be used with the "solarized" (dark) iterm2 theme
+# This is the "lite" version that does not include any of the color scheme modifications
+# To install, simply "source" this file in your .bashrc
+
+bash_powerline_lite() {
+
+	# Define the function that parse out the OS name and version number
+	# This info is used later by the ps1_setter()
+	os_parser() {
+		UNAME=$(uname)
+		if [[ "$UNAME" == "Darwin" ]]; then
+			readonly OS="MacOSX"
+		elif [[ "$UNAME" == "Linux" ]]; then
+			if [ -f /etc/redhat-release ]; then
+				readonly OS="$(cat /etc/redhat-release | awk '{print $1 $3}')"
+			elif [ -f /etc/lsb-release ]; then
+				local DISTRIB_ID="$(grep 'DISTRIB_ID' /etc/lsb-release | cut -d = -f 2)" &&
+				local DISTRIB_RELEASE="$(grep 'DISTRIB_RELEASE' /etc/lsb-release | cut -d = -f 2)" &&
+				readonly OS="$DISTRIB_ID$DISTRIB_RELEASE"
+			else
+				readonly OS=$(uname)
+			fi
+		else
+			readonly OS="UNAME"
+		fi
+	}
+
+	# Run the os_parser() to set the $OS variable
+	os_parser
+
+	# Sets the $PS1 variable; each time bash executes a command, ps1_setter() executes
+	# The bash reserved variable $PROMPT_COMMAND takes its value from ps1_setter()
+	ps1_setter() {
+		# Check the exit code of the previous command
+	    # display different colors in the prompt accordingly
+		if [ $? -eq 0 ]; then
+			local EXIT_EMOJI=":-)"
+		else
+			local EXIT_EMOJI=":-("
+		fi
+		PS1="[[USR:{$(whoami)}|DEV:{$OS|$(hostname)}|DIR:{$(pwd)}]]"
+		PS1+="\n$EXIT_EMOJI {$SHLVL} "
+	}
+	PROMPT_COMMAND=ps1_setter
+}
+
+# Runs the bash_powerline_lite() function
+bash_powerline_lite
+
+# Unsets the function; the readonly variables remain in env
+unset bash_powerline_lite
