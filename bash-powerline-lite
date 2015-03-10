@@ -38,7 +38,7 @@ bash_powerline_lite() {
 				readonly OS=$(uname)
 			fi
 		else
-			readonly OS="UNAME"
+			readonly OS="$UNAME"
 		fi
 	}
 
