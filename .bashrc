@@ -1,8 +1,8 @@
 # Aliases
 alias ll='ls -Ghal'
-alias nd='pushd'
-alias pd='popd'
+alias pd='cd $OLDPWD'
 alias cl='clear'
+alias ..='cd ..'
 
 # Turn on bash-powerline
 source /System/Library/profile/solarized.dark-bash_powerline
